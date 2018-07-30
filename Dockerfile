@@ -1,34 +1,31 @@
-FROM node:9
+FROM centos:7
 
-ENV CHROME_VERSION=64.0.3282.167-1
+MAINTAINER 87439247@qq.com
 
-RUN apt-get update && apt-get install -y \
-	apt-transport-https \
-	ca-certificates \
-	curl \
-  gnupg \
-	--no-install-recommends \
-	&& curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-	&& echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
-	&& apt-get update && apt-get install -y \
-	google-chrome-stable=$CHROME_VERSION \
-	--no-install-recommends \
-	&& rm -rf /var/lib/apt/lists/*
-
-# Add Chrome as a user
-RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome \
-    && mkdir -p /home/chrome && chown -R chrome:chrome /home/chrome
-
-RUN mkdir -p /
-
-WORKDIR /
-
-COPY package.json /
-RUN npm install && npm cache clean --force
-COPY . /
-
-USER chrome
-
-CMD [ "npm", "start" ]
+USER root
 
 EXPOSE 3000
+
+COPY google-chrome.repo /etc/yum.repos.d/
+
+RUN yum -y install google-chrome-stable --nogpgcheck
+
+RUN curl --silent --location https://rpm.nodesource.com/setup_8.x | bash -
+
+RUN yum install -y nodejs
+
+RUN mkdir -p /opt/prerender
+
+WORKDIR /opt/prerender
+#
+COPY package.json /opt/prerender/
+
+RUN npm install
+
+COPY . /opt/prerender/
+##
+RUN chmod +x /opt/prerender/entry.sh
+##
+#COPY ./*.TTC /usr/share/fonts/myfonts/
+
+CMD /opt/prerender/entry.sh

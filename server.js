@@ -2,10 +2,14 @@
 var prerender = require('./lib');
 
 var server = prerender({
-    logRequests: true
+    pageDoneCheckInterval: 100,
+    pageLoadTimeout: 40 * 1000,
+    logRequests: true,
+    chromeFlags: ['--no-sandbox', '--headless', '--disable-gpu', '--remote-debugging-port=9222', '--hide-scrollbars']
+
 });
-// server.use(prerender.basicAuth());
-// server.use(prerender.sendPrerenderHeader());
+
+
 server.use(prerender.blockResources());
 server.use(prerender.removeScriptTags());
 server.use(prerender.httpHeaders());
