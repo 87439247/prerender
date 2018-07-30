@@ -14,7 +14,11 @@
     "compression": "~1.7.1",
     "express": "~4.16.2",
     "he": "~1.1.1",
-    "valid-url": "~1.0.9"
+    "valid-url": "~1.0.9",
+    "ioredis": "^3.0.0-0",
+    "node-async-require": "^2.0.0",
+    "ent": "^2.2.0",
+    "trim": "^0.0.1"
   },
   "devDependencies": {
     "mocha": "^3.4.1",
