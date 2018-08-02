@@ -6,6 +6,8 @@ echo "module.exports = {" > $prerender_ajs
 echo "remoteUrl : \"$DISCONF_URL\"" >> $prerender_ajs
 echo "}" >> $prerender_ajs
 
-npm start
+mkdir -p /usr/share/fonts/win && cd /usr/share/fonts/win && chmod 755 *.ttf && mkfontscale && mkfontdir && fc-cache -fv
+
+cd /opt/prerender && npm start
 
 tail -f /etc/hosts
